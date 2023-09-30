@@ -1,7 +1,21 @@
+#' linreg is to build a multiple regression mode.
+#' @references wiki page link <https://dataxujing.github.io/R_oop/RC.html#section-5.5.1>
+#' @description linreg is to build a multiple regression mode based on a given dataset and a formula.
+#' @param formula a formula specifying the regression model, e.g., y ~ x1 + x2
+#' @param data a data frame containing the variables specified in the formula.
+#' @returns An object of class "linreg" containing regression results.
+#' @examples
+#' data(iris)
+#' linreg_mod_object <- linreg(Petal.Length~Species, data = iris)
+#' linreg_mod_object$print()
+#' linreg_mod_object$plot()
+#' linreg_mod_object$resid()
+#' linreg_mod_object$pred()
+#' linreg_mod_object$coef()
+#' linreg_mod_object$summary()
+#' @export
 
 linreg <- function(formula, data) {
-  #install.packages("plyr")
-  #library(plyr)
   if ( !plyr::is.formula(formula) | !is.data.frame(data)) {
     stop("Your arugments should be a formula and a dataframe dataset, please check!!")
   }
@@ -11,43 +25,43 @@ linreg <- function(formula, data) {
   #create dependent varabile y
   all_vars<-all.vars(formula)
   y <- data[,all_vars[1]]
-  
+
   #calculate X'X and X'y
   XtX <- t(X) %*% X
   Xty <- t(X) %*% y
-  
+
   #calculate the coefficients β^ using the formula
   beta_hat <- solve(XtX) %*% Xty
 
   #calculate the fitted values
   fitted_values <- X %*% beta_hat
-    
-  #calculate the residuals 
+
+  #calculate the residuals
   residuals <- y - X %*% beta_hat
-  
+
   #calculate the degrees of freedom
   # n is the number of observations
   # p is number of predictor variables
   n <- length(y)
-  p <- ncol(X) 
+  p <- ncol(X)
   df <- n - p
-  
+
   #calculate the residual variance
   residul_variance <- sum(residuals^2) / df
-  
+
   #calculate the variance of the regression coefficients
   variance_beta_hat <- residul_variance * solve(t(X) %*% X)
-  
+
   #calculate standard errors of coeficients
   sd_errors <- sqrt(diag(variance_beta_hat))
-  
+
   #calculate t-values for each coefficient
   t_values <- beta_hat / (sqrt(diag(variance_beta_hat)))
-  
+
   #calculate p-values for each coefficient
   p_values <- 2*pt(-abs(t_values), df=length(data)-1)
-  
-  
+
+
   #define an RC class object named linreg
   linreg <- setRefClass("linreg",fields=list(Formula="formula",
                                              Dataset="data.frame",
@@ -77,17 +91,17 @@ linreg <- function(formula, data) {
                               FittedValues = c(FittedValues[99], FittedValues[118], FittedValues[119]),
                               Label = c("99", "118", "119")
                             )
-                            
-                            #create first plot for residuals VS fitted Values 
-                            g1 <- ggplot2::ggplot(Dataset, aes(x = FittedValues, y = Residuals)) + 
-                              geom_point(shape = 1) + 
-                              labs(x = paste0("Fitted Values\n linreg(", deparse(Formula), ")"), y = "Residuals", title = "Residuals VS Fitted") + 
-                              stat_summary(fun = median, geom = "line", color="red") + 
-                              theme_test() + 
-                              theme(plot.title = element_text(size=12,hjust=0.5)) + 
-                              geom_hline(yintercept = 0, color = "grey", linetype = "dotted") + 
+
+                            #create first plot for residuals VS fitted Values
+                            g1 <- ggplot2::ggplot(Dataset, aes(x = FittedValues, y = Residuals)) +
+                              geom_point(shape = 1) +
+                              labs(x = paste0("Fitted Values\n linreg(", deparse(Formula), ")"), y = "Residuals", title = "Residuals VS Fitted") +
+                              stat_summary(fun = median, geom = "line", color="red") +
+                              theme_test() +
+                              theme(plot.title = element_text(size=12,hjust=0.5)) +
+                              geom_hline(yintercept = 0, color = "grey", linetype = "dotted") +
                               geom_text(data = specific_points_df, aes(x = FittedValues, y = Residuals, label = Label), hjust = -0.2, vjust = 0.5, size = 3)
-                            
+
                             #create second plot's dataframe from the linreg mode
                             g2_residuals_fitted_df <- data.frame(
                               Sqrt_Abs_Residuals = sqrt(abs(Residuals/sd(Residuals))),
@@ -99,16 +113,16 @@ linreg <- function(formula, data) {
                               FittedValues = c(g2_residuals_fitted_df$FittedValues[99], g2_residuals_fitted_df$FittedValues[118], g2_residuals_fitted_df$FittedValues[119]),
                               Label = c("99", "118", "119")
                             )
-                            
+
                             #create second plot for scale-location
-                            g2 <- ggplot2::ggplot(g2_residuals_fitted_df, aes(x = FittedValues, y = Sqrt_Abs_Residuals)) + 
-                              geom_point(shape = 1) + 
-                              labs(x = paste0("Fitted Values\n linreg(", deparse(Formula), ")"), y = expression(sqrt(abs("Standardized residuals"))), title = "Scale-Location") + 
-                              stat_summary(fun = median, geom = "line", color="red") + 
-                              theme_test() + 
-                              theme(plot.title = element_text(size=12,hjust=0.5)) + 
-                              geom_text(data = g2_specific_points_df, aes(x = FittedValues, y = Sqrt_Abs_Residuals, label = Label), hjust = -0.2, vjust = 0.5, size = 3)  
-                            
+                            g2 <- ggplot2::ggplot(g2_residuals_fitted_df, aes(x = FittedValues, y = Sqrt_Abs_Residuals)) +
+                              geom_point(shape = 1) +
+                              labs(x = paste0("Fitted Values\n linreg(", deparse(Formula), ")"), y = expression(sqrt(abs("Standardized residuals"))), title = "Scale-Location") +
+                              stat_summary(fun = median, geom = "line", color="red") +
+                              theme_test() +
+                              theme(plot.title = element_text(size=12,hjust=0.5)) +
+                              geom_text(data = g2_specific_points_df, aes(x = FittedValues, y = Sqrt_Abs_Residuals, label = Label), hjust = -0.2, vjust = 0.5, size = 3)
+
                             plots <- list(g1,g2)
                             for (i in 1:length(plots)) {
                               base::plot(plots[[i]])
@@ -166,7 +180,7 @@ linreg <- function(formula, data) {
                     StandardErrors = sd_errors,
                     TValues = t_values,
                     PValues = p_values
-    
+
   )
   return(linreg_obj)
 }
