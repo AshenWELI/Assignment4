@@ -13,12 +13,12 @@ Description: This is a Multiple Linear Regression model.
 License: GPL (>= 2)
 Encoding: UTF-8
 RoxygenNote: 7.2.3
-LazyData: true
 Depends: 
     R (>= 2.10)
 Imports:
     plyr,
-    ggplot2
+    ggplot2,
+    methods
 Suggests: 
     knitr,
     rmarkdown,

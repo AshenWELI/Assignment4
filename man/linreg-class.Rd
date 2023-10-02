@@ -18,16 +18,14 @@ linreg is to build a multiple regression mode based on a given dataset and a for
 }
 
 \examples{
-\dontrun{
 data(iris)
-linreg_mod_object <- linreg(Petal.Length~Species, data = iris)
+linreg_mod_object <- linreg$new(Petal.Length~Species, data = iris)
 linreg_mod_object$print()
 linreg_mod_object$plot()
 linreg_mod_object$resid()
 linreg_mod_object$pred()
 linreg_mod_object$coef()
 linreg_mod_object$summary()
-}
 }
 \references{
 Reference page link <https://dataxujing.github.io/R_oop/RC.html#section-5.5.1>

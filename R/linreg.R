@@ -5,17 +5,18 @@
 #' @param data a data frame containing the variables specified in the formula.
 #' @returns An object of class "linreg" containing regression results.
 #' @examples 
-#' \dontrun{
 #' data(iris)
-#' linreg_mod_object <- linreg(Petal.Length~Species, data = iris)
+#' linreg_mod_object <- linreg$new(Petal.Length~Species, data = iris)
 #' linreg_mod_object$print()
 #' linreg_mod_object$plot()
 #' linreg_mod_object$resid()
 #' linreg_mod_object$pred()
 #' linreg_mod_object$coef()
 #' linreg_mod_object$summary()
-#' }
-#' @export
+#' @import plyr
+#' @import ggplot2
+#' @import methods
+#' @export linreg
 #define an RC class object named linreg
 linreg <- setRefClass("linreg",fields=list(Formula="formula",
                                            Dataset="data.frame",
