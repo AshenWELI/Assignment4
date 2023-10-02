@@ -18,12 +18,12 @@ Depends:
 Imports:
     plyr,
     ggplot2,
-    methods,
-    devtools
+    methods
 Suggests: 
     knitr,
     rmarkdown,
     markdown,
+    devtools,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr

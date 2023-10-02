@@ -30,7 +30,6 @@ linreg <- setRefClass("linreg",fields=list(Formula="formula",
                                            ResidulVariance="numeric",
                                            VarianceofCoefficients="matrix",
                                            StandardErrors="numeric",
-                                           RSE="numeric",
                                            TValues="matrix",
                                            PValues="matrix"),
                       methods = list(
@@ -63,7 +62,6 @@ linreg <- setRefClass("linreg",fields=list(Formula="formula",
                           .self$VarianceofCoefficients <<- .self$ResidulVariance * solve(t(.self$X) %*% .self$X)
                           #calculate standard errors of coeficients
                           .self$StandardErrors <<- sqrt(diag(.self$VarianceofCoefficients))
-                          .self$RSE <<- sqrt(sum(.self$Residuals^2) / (.self$DegreesofFreedom - 1))
                           #calculate t-values for each coefficient
                           .self$TValues <<- .self$RegressionsCoefficients / .self$StandardErrors
                           #calculate p-values for each coefficient
