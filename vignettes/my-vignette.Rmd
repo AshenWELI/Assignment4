@@ -15,7 +15,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-devtools::load_all("~/Desktop/github/Ashen/Assignment4")
+devtools::install_github("Ashen/Assignment4")
+library(Assignment4)
 ```
 
 ### import sample dataset iris

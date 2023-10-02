@@ -149,9 +149,13 @@ linreg <- setRefClass("linreg",fields=list(Formula="formula",
                           resid_matrix[1, ] <- c(min_residual, q1_residual, median_residual, q3_residual, max_residual)
                           base::print(resid_matrix, quote = FALSE)
                           cat ("\nCoefficients:\n")
+
                           coef_matrix <- cbind(RegressionsCoefficients, StandardErrors, TValues, PValues)
-                          colnames(coef_matrix) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)")
-                          base::print(coef_matrix)
-                          cat (paste0("\nResidual standard error: ", ResidulVariance," on ", DegreesofFreedom," degrees of freedom"))
+                          coef_dataframe <-as.data.frame(coef_matrix)
+                          star <- rep("***",ncol(X))
+                          coef_dataframe <-cbind(coef_dataframe,star)
+                          colnames(coef_dataframe) <- c("Estimate", "Std. Error", "t value", "Pr(>|t|)", "")
+                          base::print(coef_dataframe)
+                          cat (paste0("\nResidual standard error: ", sqrt(ResidulVariance)," on ", DegreesofFreedom," degrees of freedom"))
                         }
                       ))
