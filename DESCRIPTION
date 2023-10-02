@@ -18,7 +18,8 @@ Depends:
 Imports:
     plyr,
     ggplot2,
-    methods
+    methods,
+    devtools
 Suggests: 
     knitr,
     rmarkdown,
